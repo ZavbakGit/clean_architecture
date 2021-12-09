@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:clean_architecture/core/error/exeption.dart';
 import 'package:clean_architecture/features/number_trivia/data/datasources/number_trivia_local_data_sours.dart';
 import 'package:clean_architecture/features/number_trivia/data/models/number_trivia_model.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -33,10 +34,44 @@ void main() {
             .thenReturn(fixture('trivia_cached.json'));
         // act
         final result = await dataSource.getLastNumberTrivia();
-        // // assert
-        // verify(() => mockSharedPreferences.getString(cachedNumberTrivia));
-        // expect(result, equals(tNumberTriviaModel));
+        // assert
+        verify(() => mockSharedPreferences.getString(cachedNumberTrivia));
+        expect(result, equals(tNumberTriviaModel));
       },
     );
+
+    test('should throw a CacheException when there is not a cached value', () {
+      // arrange
+      when(() => mockSharedPreferences.getString(any())).thenReturn(null);
+      // act
+      // Not calling the method here, just storing it inside a call variable
+      final call = dataSource.getLastNumberTrivia;
+      // assert
+      // Calling the method happens from a higher-order function passed.
+      // This is needed to test if calling a method throws an exception.
+      expect(() => call(), throwsA(const TypeMatcher<CacheException>()));
+    });
+  });
+
+  group('cacheNumberTrivia', () {
+    const tNumberTriviaModel =
+        NumberTriviaModel(number: 1, text: 'test trivia');
+
+    test('should call SharedPreferences to cache the data', () {
+      when(() => mockSharedPreferences.setString(any(), any()))
+          .thenAnswer((_) async => true);
+
+      // when(() => mockSharedPreferences.setString('')).thenReturn(null);
+
+      // act
+      dataSource.cacheNumberTrivia(tNumberTriviaModel);
+      // assert
+      final expectedJsonString = json.encode(tNumberTriviaModel.toJson());
+
+      verify(() => mockSharedPreferences.setString(
+            cachedNumberTrivia,
+            expectedJsonString,
+          ));
+    });
   });
 }
