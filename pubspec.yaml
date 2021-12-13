@@ -27,7 +27,7 @@ dependencies:
   # Functional programming thingies
   dartz: ^0.10.1
 
-  # Remote API
+  # Remote API 
   data_connection_checker_tv: ^0.3.5-nullsafety
   http: ^0.13.4
 
@@ -42,6 +42,8 @@ dev_dependencies:
   
   # mockito: ^5.0.16
   mocktail: ^0.2.0
+
+  bloc_test: ^9.0.1
     
   flutter_lints: ^1.0.0
 
