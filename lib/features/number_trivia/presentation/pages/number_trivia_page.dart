@@ -51,7 +51,7 @@ class NumberTriviaPage extends StatelessWidget {
 
               const SizedBox(height: 20),
               // Bottom half
-              TriviaControls()
+              const TriviaControls()
             ],
           ),
         ),
